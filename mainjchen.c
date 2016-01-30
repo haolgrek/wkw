@@ -6,7 +6,7 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/30 18:22:20 by rluder            #+#    #+#             */
-/*   Updated: 2016/01/30 19:08:58 by rluder           ###   ########.fr       */
+/*   Updated: 2016/01/30 22:08:05 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	do_resize(t_win *board, int lines, int cols, int *tab)
 	int		y;
 
 	i = -1;
-	while (++i < 16)
+	while (i < 16)
 	{
 		x = (i % 4 == 0) ? 0 : 0;
 		x = (i % 4 == 1) ? cols : x;
@@ -44,9 +44,8 @@ static void	do_resize(t_win *board, int lines, int cols, int *tab)
 		board[i].value = tab[i];
 //		if (board[i].value)
 			mvprintw(y + (lines / 2), x + (cols / 2), "%d", board[i].value);
-//		box(board[i].win, 0 , 0);
 		wborder(board[i].win, '|', '|', '-', '-', '+', '+', '+', '+');
-		wrefresh(board[i].win);
+		wrefresh(board[i++].win);
 		refresh();
 	}
 	return ;
