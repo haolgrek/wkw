@@ -6,13 +6,29 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/30 18:22:20 by rluder            #+#    #+#             */
-/*   Updated: 2016/01/30 22:08:05 by rluder           ###   ########.fr       */
+/*   Updated: 2016/01/31 18:07:29 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
-void	set_tab(int *tab)
+static int	initrandom(int*tab)
+{
+	int	i;
+	int	k;
+
+	k = 0;
+	srand(time(NULL));
+	while (k < 2)
+	{
+		i = rand() % 16;
+		tab[i] = ((rand() % 2 + 1) * 2);
+		k++;
+	}
+	return (0);
+}
+
+static void	set_tab(int *tab)
 {
 	int	i;
 
@@ -42,7 +58,12 @@ static void	do_resize(t_win *board, int lines, int cols, int *tab)
 			delwin(board[i].win);
 		board[i].win = newwin(lines, cols, y, x);
 		board[i].value = tab[i];
-//		if (board[i].value)
+		if (board[i].value == WIN_VALUE)
+		{
+			board[i].win = newwin(LINES / 4, COLS / 8, LINES / 2, COLS / 2);
+			wborder(board[i].win, '|', '|', '-', '-', '+', '+', '+', '+');
+		}
+		if (board[i].value)
 			mvprintw(y + (lines / 2), x + (cols / 2), "%d", board[i].value);
 		wborder(board[i].win, '|', '|', '-', '-', '+', '+', '+', '+');
 		wrefresh(board[i++].win);
@@ -72,13 +93,16 @@ int		main(void)
 	int		tab[16];
 	t_win	board[16];
 
+	ch = 0;
 	set_tab(tab);
+	initrandom(tab);
 	init_ncurses(board);
 	while (ch != 27)
 	{
 		clear();
-//		while ( = 
-	 	do_resize(board, LINES / 4, COLS / 4, tab);
+		if (ch == 258 || ch == 259 || ch == 260 || ch == 261)
+			keypressed(ch, tab);
+		do_resize(board, LINES / 4, COLS / 4, tab);
 		ch = getch();
 	}
 	endwin();
